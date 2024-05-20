@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_account">
+
+    <fragment
+        android:id="@+id/navigation_login"
+        android:name="com.example.accountastock_android.ui.login.LoginFragment"
+        android:label="@string/title_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_navigation_login_to_navigation_account"
+            app:destination="@id/navigation_account" />
+        <action
+            android:id="@+id/action_navigation_login_to_navigation_sign_up"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_navigation_login_to_subscriptionFragment"
+            app:destination="@id/subscriptionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_account"
+        android:name="com.example.accountastock_android.ui.account.AccountFragment"
+        android:label="@string/title_account"
+        tools:layout="@layout/fragment_account" />
+
+    <fragment
+        android:id="@+id/navigation_inventory"
+        android:name="InventoryFragment"
+        android:label="@string/title_inventory" />
+
+    <fragment
+        android:id="@+id/navigation_user"
+        android:name="UserFragment"
+        android:label="@string/title_user">
+        <action
+            android:id="@+id/action_navigation_user_to_navigation_login"
+            app:destination="@id/navigation_login" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.accountastock_android.ui.signup.SignUpFragment"
+        android:label="@string/title_sign_up"
+        tools:layout="@layout/fragment_sign_up">
+        <action
+            android:id="@+id/action_navigation_sign_up_to_navigation_login"
+            app:destination="@id/navigation_login" />
+    </fragment>
+    <fragment
+        android:id="@+id/subscriptionFragment"
+        android:name="com.example.accountastock_android.ui.subscription.SubscriptionFragment"
+        android:label="@string/title_subscription"
+        tools:layout="@layout/fragment_subscription" >
+        <action
+            android:id="@+id/action_subscriptionFragment_to_navigation_login"
+            app:destination="@id/navigation_login" />
+    </fragment>
+</navigation>

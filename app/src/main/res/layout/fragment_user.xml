@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Conteneur principal pour les informations utilisateur et le bouton de téléchargement -->
+    <LinearLayout
+        android:id="@+id/mainContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <!-- Champs d'information utilisateur -->
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nom: "
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textViewEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email: "
+            android:textSize="18sp" />
+
+        <!-- Champ pour la date de naissance -->
+        <TextView
+            android:id="@+id/textViewDateOfBirth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date de naissance: "
+            android:textSize="18sp" />
+
+        <!-- Champ pour le nom de l'entreprise -->
+        <TextView
+            android:id="@+id/textViewCompanyName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nom de l'entreprise: "
+            android:textSize="18sp" />
+
+        <!-- Champ pour le numéro de SIRET -->
+        <TextView
+            android:id="@+id/textViewSiretNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Numéro de SIRET: "
+            android:textSize="18sp" />
+
+        <Spinner
+            android:id="@+id/spinnerPeriod"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:entries="@array/period_options"
+            android:minHeight="48dp" />
+
+        <!-- Layout horizontal pour les spinners mois et année -->
+        <LinearLayout
+            android:id="@+id/monthYearContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:visibility="gone">
+
+            <!-- NumberPicker pour les mois -->
+            <com.shawnlin.numberpicker.NumberPicker
+                android:id="@+id/numberPickerMonth"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                app:np_max="12"
+                tools:ignore="MissingClass" />
+
+            <!-- NumberPicker pour les années -->
+            <com.shawnlin.numberpicker.NumberPicker
+                android:id="@+id/numberPickerYear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                app:np_max="2024"
+                tools:ignore="MissingClass" />
+
+        </LinearLayout>
+
+        <!-- Bouton pour télécharger les déclarations fiscales -->
+        <Button
+            android:id="@+id/buttonDownloadPdf"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Télécharger la déclaration fiscale"/>
+
+        <!-- Ajoutez d'autres éléments d'interface utilisateur au besoin -->
+
+    </LinearLayout>
+
+    <!-- Bouton de déconnexion -->
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Déconnexion"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

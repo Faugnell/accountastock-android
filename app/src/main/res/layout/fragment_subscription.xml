@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Niveau d'abonnement"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Info"
+            android:onClick="showSubscriptionInfo"
+            android:src="@drawable/ic_info"
+            tools:ignore="TouchTargetSizeCheck" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/subscriptionLevelGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp">
+
+        <RadioButton
+            android:id="@+id/level1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Niveau 1" />
+
+        <RadioButton
+            android:id="@+id/level2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Niveau 2" />
+
+        <RadioButton
+            android:id="@+id/level3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Niveau 3" />
+    </RadioGroup>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="1,2"
+        android:layout_marginTop="16dp">
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="Client-sided" />
+            <TextView
+                android:id="@+id/priceLevel1"
+                android:layout_column="2"
+                android:text="1,99€/m" />
+            <TextView
+                android:id="@+id/priceLevel1Yearly"
+                android:layout_column="3"
+                android:text="20€/y" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="Stockage cloud" />
+            <TextView
+                android:id="@+id/priceLevel2"
+                android:layout_column="2"
+                android:text="3,99€/m" />
+            <TextView
+                android:id="@+id/priceLevel2Yearly"
+                android:layout_column="3"
+                android:text="35€/y" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="Accès web" />
+            <TextView
+                android:id="@+id/priceLevel3"
+                android:layout_column="2"
+                android:text="4,99€/m" />
+            <TextView
+                android:id="@+id/priceLevel3Yearly"
+                android:layout_column="3"
+                android:text="40€/y" />
+        </TableRow>
+    </TableLayout>
+
+    <RadioGroup
+        android:id="@+id/paymentFrequencyGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp">
+
+        <RadioButton
+            android:id="@+id/monthly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mensuel" />
+
+        <RadioButton
+            android:id="@+id/annual"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Annuel" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/paymentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Effectuer un paiement"/>
+    <TextView
+        android:id="@+id/backToLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back to Login"
+        app:layout_constraintTop_toBottomOf="@id/signUpButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        android:textColor="@color/purple_200"
+        android:textStyle="bold"/>
+</LinearLayout>

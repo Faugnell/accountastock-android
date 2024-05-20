@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="period_options">
+        <item>Choisir une période</item>
+        <item>Mois</item>
+        <item>Année</item>
+    </string-array>
+</resources>
