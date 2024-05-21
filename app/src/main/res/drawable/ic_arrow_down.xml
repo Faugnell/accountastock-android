@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0"
+    android:tint="@color/red"> <!-- Couleur de la flèche vers le bas -->
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="M12,22 L5,10 L19,10 Z"/>
+</vector>

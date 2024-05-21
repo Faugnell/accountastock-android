@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <!-- Titre -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choisir le type de transaction :"
+        android:textSize="20sp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
+
+    <!-- RadioGroup pour sélectionner le type de transaction -->
+    <RadioGroup
+        android:id="@+id/transactionTypeRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp">
+
+        <!-- Option pour ajouter une dépense -->
+        <RadioButton
+            android:id="@+id/expenseRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dépense"
+            android:checked="true"/>
+
+        <!-- Option pour ajouter un profit -->
+        <RadioButton
+            android:id="@+id/profitRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Profit"/>
+    </RadioGroup>
+
+    <!-- Layout for adding expense -->
+    <include
+        android:id="@+id/layoutAddExpense"
+        layout="@layout/layout_add_expense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <!-- Layout for adding profit -->
+    <include
+        android:id="@+id/layoutAddProfit"
+        layout="@layout/layout_add_profit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <!-- Bouton pour ajouter la transaction -->
+    <Button
+        android:id="@+id/addTransactionButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ajouter la transaction"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"/>
+
+    <TextView
+        android:id="@+id/homeLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="retour à la page comptabilité"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="16dp"
+        android:textColor="@color/purple_200"
+        android:textStyle="bold"/>
+
+</LinearLayout>

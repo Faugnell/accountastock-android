@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Titre de la dépense -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Expense"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:padding="8dp"/>
+
+    <!-- Champ d'édition pour la description -->
+    <EditText
+        android:id="@+id/editTextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Expense Description"
+        android:inputType="text"
+        android:minHeight="48dp" />
+
+    <!-- Champ d'édition pour le commentaire -->
+    <EditText
+        android:id="@+id/editTextComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Comment (Optional)"
+        android:inputType="text"
+        android:minHeight="48dp" />
+
+    <!-- Champ d'édition pour le montant -->
+    <EditText
+        android:id="@+id/editTextAmount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Expense Amount"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp" />
+
+    <!-- Champ d'édition pour la taxe -->
+    <EditText
+        android:id="@+id/editTextTax"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Expense Tax"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp" />
+
+</LinearLayout>

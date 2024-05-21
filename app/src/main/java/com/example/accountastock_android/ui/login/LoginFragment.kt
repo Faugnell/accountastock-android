@@ -37,6 +37,8 @@ class LoginFragment : Fragment() {
             val password = binding.password.text.toString()
             loginViewModel.login(email, password)
             loginViewModel.checkSubscription(email)
+            var userId = getUserIdByEmail(email)
+            saveUserId(userId)
         }
 
         binding.signUpLink.setOnClickListener {
@@ -70,14 +72,24 @@ class LoginFragment : Fragment() {
         })
     }
 
+    private fun getSubscriptionLevel(): String? {
+        val sharedPreferences = requireActivity().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("subscription_level", null)
+    }
+
     private fun saveSubscriptionLevel(subscriptionLevel: String) {
         val sharedPreferences = requireActivity().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
         sharedPreferences.edit().putString("subscription_level", subscriptionLevel).apply()
     }
 
-    private fun getSubscriptionLevel(): String? {
+    private fun getUserIdByEmail(email: String): Int {
+        var userId = loginViewModel.getUserId(email)
+        return userId
+    }
+
+    private fun saveUserId(userId: Int) {
         val sharedPreferences = requireActivity().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("subscription_level", null)
+        sharedPreferences.edit().putInt("user_id", userId).apply()
     }
 
     private fun navigateToDestination(subscriptionLevel: Int) {

@@ -30,16 +30,21 @@
                 android:id="@+id/text_profit_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2000$"
                 android:textSize="24sp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"/>
+
+            <ImageView
+                android:id="@+id/image_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dp" />
 
             <TextView
                 android:id="@+id/text_profit_percentage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+10%"
                 android:textSize="14sp"
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="8dp"/>

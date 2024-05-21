@@ -25,7 +25,13 @@
         android:id="@+id/navigation_account"
         android:name="com.example.accountastock_android.ui.account.AccountFragment"
         android:label="@string/title_account"
-        tools:layout="@layout/fragment_account" />
+        tools:layout="@layout/fragment_account" >
+
+        <action
+            android:id="@+id/action_profitFragment_to_addTransactionFragment"
+            app:destination="@id/addTransactionFragment" />
+
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_inventory"
@@ -58,5 +64,19 @@
         <action
             android:id="@+id/action_subscriptionFragment_to_navigation_login"
             app:destination="@id/navigation_login" />
+    </fragment>
+    <fragment
+        android:id="@+id/addTransactionFragment"
+        android:name="com.example.accountastock_android.ui.addTransaction.AddTransactionFragment"
+        android:label="@string/title_AddTransaction"
+        tools:layout="@layout/fragment_add_transaction" >
+        <action
+            android:id="@+id/action_addTransactionFragment_to_navigation_account"
+            app:destination="@id/navigation_account" />
+    </fragment>
+    <fragment
+        android:id="@+id/profitFragment"
+        android:name="ProfitFragment"
+        android:label="ProfitFragment" >
     </fragment>
 </navigation>

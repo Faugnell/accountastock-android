@@ -42,9 +42,6 @@ public class UserRepository {
     }
 
     public void addUser(String name, String email) {
-        // Ajouter à la base de données locale
-        dbHelper.addUser(name, email);
-
         // Ajouter à l'API en ligne
         User newUser = new User();
         newUser.setName(name);
@@ -62,29 +59,5 @@ public class UserRepository {
                 // Gérer l'erreur
             }
         });
-    }
-
-    public void syncUsers() {
-        apiService.getUsers().enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if (response.isSuccessful()) {
-                    List<User> users = response.body();
-                    for (User user : users) {
-                        // Ajouter chaque utilisateur à la base de données locale
-                        dbHelper.addUser(user.getName(), user.getEmail());
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                // Gérer l'erreur
-            }
-        });
-    }
-
-    public List<User> getAllUsers() {
-        return dbHelper.getAllUsers();
     }
 }

@@ -8,4 +8,5 @@
     <string name="search_icon_description">Search Icon</string>
     <string name="search_hint">Rechercher</string>
     <string name="title_subscription">Abonnement</string>
+    <string name="title_AddTransaction">Nouvelle transaction</string>
 </resources>

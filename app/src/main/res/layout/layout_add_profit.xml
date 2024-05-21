@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- Titre du profit -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Profit"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:padding="8dp"/>
+
+    <!-- Champ d'édition pour la description -->
+    <EditText
+        android:id="@+id/profitDescriptionEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Profit Description"
+        android:inputType="text"
+        android:minHeight="48dp" />
+
+    <!-- Champ d'édition pour le commentaire -->
+    <EditText
+        android:id="@+id/profitCommentEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Comment (Optional)"
+        android:inputType="text"
+        android:minHeight="48dp" />
+
+    <!-- Champ d'édition pour le montant -->
+    <EditText
+        android:id="@+id/profitAmountEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Profit Amount"
+        android:inputType="numberDecimal"
+        android:minHeight="48dp" />
+
+</LinearLayout>
