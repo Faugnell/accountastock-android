@@ -5,6 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
+import android.view.SurfaceControl;
+
+import androidx.annotation.RequiresApi;
+
 import com.example.accountastock_android.data.model.Expense;
 import com.example.accountastock_android.data.model.Object;
 import com.example.accountastock_android.data.model.Profit;
@@ -35,7 +40,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 "amount REAL, " +
                 "tax_percent REAL, " +
                 "fk_id_user INTEGER, " +
-                "date TEXT)";
+                "date DATE DEFAULT (strftime('%Y-%m-%d', 'now')))";
 
         String CREATE_OBJECT_TABLE = "CREATE TABLE object (" +
                 "id_object INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -50,11 +55,24 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 "note TEXT, " +
                 "amount REAL, " +
                 "fk_id_user INTEGER, " +
-                "date TEXT)";
+                "date DATE DEFAULT (strftime('%Y-%m-%d', 'now')))";
+
+        String CREATE_TRANSACTION_TABLE = "CREATE TABLE `transaction` (" +
+                "id_transaction INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "title TEXT, " +
+                "note TEXT, " +
+                "amount REAL, " +
+                "fk_id_profit INTEGER, " +
+                "fk_id_expense INTEGER, " +
+                "FOREIGN KEY (fk_id_profit) REFERENCES profit(id_profit), " +
+                "FOREIGN KEY (fk_id_expense) REFERENCES expense(id_expense)" +
+                ")";
+
 
         db.execSQL(CREATE_EXPENSE_TABLE);
         db.execSQL(CREATE_OBJECT_TABLE);
         db.execSQL(CREATE_PROFIT_TABLE);
+        db.execSQL(CREATE_TRANSACTION_TABLE);
     }
 
     @Override
@@ -62,6 +80,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS expense");
         db.execSQL("DROP TABLE IF EXISTS object");
         db.execSQL("DROP TABLE IF EXISTS profit");
+        db.execSQL("DROP TABLE IF EXISTS `transaction`");
         onCreate(db);
     }
 
@@ -102,28 +121,16 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Méthodes pour récupérer des données des nouvelles tables
-    public List<Expense> getAllExpenses() {
-        List<Expense> expenses = new ArrayList<>();
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM expense", null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                Expense expense = new Expense();
-                expense.setId(cursor.getInt(0));
-                expense.setTitle(cursor.getString(1));
-                expense.setNote(cursor.getString(2));
-                expense.setAmount(cursor.getDouble(3));
-                expense.setTaxPercent(cursor.getInt(4));
-                expense.setUserId(cursor.getInt(5));
-                expense.setDate(cursor.getString(6));
-                expenses.add(expense);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
+    public void addTransaction(String title, String note, double amount, int fkIdProfit, int fkIdExpense) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("title", title);
+        values.put("note", note);
+        values.put("amount", amount);
+        values.put("fk_id_profit", fkIdProfit);
+        values.put("fk_id_expense", fkIdExpense);
+        db.insert("transaction", null, values);
         db.close();
-        return expenses;
     }
 
     public List<Object> getAllObjects() {

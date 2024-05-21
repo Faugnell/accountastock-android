@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Profit"
+        android:text="Gain"
         android:textStyle="bold"
         android:textSize="18sp"
         android:padding="8dp"/>
@@ -18,7 +18,7 @@
         android:id="@+id/profitDescriptionEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Profit Description"
+        android:hint="Nom du Gain"
         android:inputType="text"
         android:minHeight="48dp" />
 
@@ -27,7 +27,7 @@
         android:id="@+id/profitCommentEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Comment (Optional)"
+        android:hint="Commentaire (Facultatif)"
         android:inputType="text"
         android:minHeight="48dp" />
 
@@ -36,7 +36,7 @@
         android:id="@+id/profitAmountEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Profit Amount"
+        android:hint="Montant du gain"
         android:inputType="numberDecimal"
         android:minHeight="48dp" />
 

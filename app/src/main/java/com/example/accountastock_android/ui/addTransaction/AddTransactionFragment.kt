@@ -127,19 +127,19 @@ class AddTransactionFragment : Fragment() {
                     if (getSubscriptionLevel() == "Level 1") {
                         val dbHelper = MyDatabaseHelper(requireContext())
                         dbHelper.addExpense(title, comment, amount, tax, userId, date)
-                        Toast.makeText(requireContext(), "Dépense ajoutée avec succès", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Dépense ajoutée avec succès", Toast.LENGTH_SHORT).show()
                     } else {
                         // Gérer le cas où l'utilisateur n'a pas un abonnement de niveau 1
-                        Toast.makeText(requireContext(), "Niveau d'abonnement insuffisant", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Niveau d'abonnement insuffisant", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: NumberFormatException) {
                 // Gérer les erreurs de conversion
-                Toast.makeText(requireContext(), "Veuillez entrer des valeurs numériques valides", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Veuillez entrer des valeurs numériques valides", Toast.LENGTH_SHORT).show()
             }
         } else {
             // Gérer les cas où les champs sont vides
-            Toast.makeText(requireContext(), "Veuillez remplir tous les champs obligatoires", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Veuillez remplir tous les champs obligatoires", Toast.LENGTH_SHORT).show()
             Log.e("AddExpense", "Champs obligatoires manquants : titre, montant ou taxe")
         }
     }
@@ -152,19 +152,36 @@ class AddTransactionFragment : Fragment() {
 
         val title = binding.layoutAddExpense.editTextTitle.text.toString()
         val comment = binding.layoutAddExpense.editTextComment.text.toString()
-        val amount = binding.layoutAddExpense.editTextAmount.text.toString().toDouble()
-        val userId = getUserId()
-        val date = currentDate.format(formatter)
+        val amountText = binding.layoutAddExpense.editTextAmount.text.toString()
 
-        if (getSubscriptionLevel() == "Level 1") {
-            val dbHelper = MyDatabaseHelper(requireContext())
-            dbHelper.addProfit(title, comment, amount, userId, date)
-            // Ajouter un toast pour indiquer que la dépense a été ajoutée avec succès
-            Toast.makeText(requireContext(), "Profit ajoutée avec succès", Toast.LENGTH_SHORT).show()
+        // Vérifiez que le titre et le montant ne sont pas vides
+        if (title.isNotEmpty() && amountText.isNotEmpty()) {
+            try {
+                val amount = amountText.toDouble()
+                val userId = getUserId()
+                val date = currentDate.format(formatter)
+
+                if (getSubscriptionLevel() == "Level 1") {
+                    val dbHelper = MyDatabaseHelper(requireContext())
+                    dbHelper.addProfit(title, comment, amount, userId, date)
+                    Toast.makeText(requireContext(), "Profit ajouté avec succès", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Gérer le cas où l'utilisateur n'a pas un abonnement de niveau 1
+                    Toast.makeText(requireContext(), "Niveau d'abonnement insuffisant", Toast.LENGTH_SHORT).show()
+                    Log.e("AddProfit", "L'utilisateur n'a pas un abonnement de niveau 1")
+                }
+            } catch (e: NumberFormatException) {
+                // Gérer les erreurs de conversion
+                Toast.makeText(requireContext(), "Veuillez entrer des valeurs numériques valides", Toast.LENGTH_SHORT).show()
+                Log.e("AddProfit", "Erreur de format numérique : ${e.message}")
+            }
         } else {
-            // Gérer le cas où l'utilisateur n'a pas un abonnement de niveau 1
+            // Gérer les cas où les champs sont vides
+            Toast.makeText(requireContext(), "Veuillez remplir tous les champs obligatoires", Toast.LENGTH_SHORT).show()
+            Log.e("AddProfit", "Champs obligatoires manquants : titre ou montant")
         }
     }
+
 
     private fun getSubscriptionLevel(): String? {
         val sharedPreferences = requireActivity().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
