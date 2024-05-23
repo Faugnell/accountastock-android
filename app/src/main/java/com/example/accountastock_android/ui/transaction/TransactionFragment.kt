@@ -1,5 +1,6 @@
 package com.example.accountastock_android.ui.transaction
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,8 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.example.accountastock_android.R
+import com.example.accountastock_android.data.database.MyDatabaseHelper
+import com.example.accountastock_android.data.model.Transaction
 
 class TransactionFragment : Fragment() {
 
@@ -16,7 +19,6 @@ class TransactionFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_transaction, container, false)
     }
 
@@ -25,9 +27,15 @@ class TransactionFragment : Fragment() {
 
         val transactionList = view.findViewById<LinearLayout>(R.id.transaction_list)
 
-        for (i in 1..40) {
-            val transactionView = createTransactionView("Transaction $i", "Note $i", "$${i * 100}")
-            transactionList.addView(transactionView)
+        val dbHelper = MyDatabaseHelper(requireContext())
+
+        if (getSubscriptionLevel() == "level 1") {
+            val transactions = dbHelper.getTransactionsLast30Days().sortedByDescending { it.date }
+
+            for (transaction in transactions) {
+                val transactionView = createTransactionView(transaction.title, transaction.note, "${transaction.amount}")
+                transactionList.addView(transactionView)
+            }
         }
     }
 
@@ -38,10 +46,10 @@ class TransactionFragment : Fragment() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(0, 8, 0, 8) // No horizontal margin to make it full width
+                setMargins(0, 8, 0, 8)
             }
-            cardElevation = 0f // Remove shadow by setting elevation to 0
-            radius = 0f // Remove corner radius if not needed
+            cardElevation = 0f
+            radius = 0f
         }
 
         val linearLayout = LinearLayout(context).apply {
@@ -77,7 +85,7 @@ class TransactionFragment : Fragment() {
         titleNoteLayout.addView(note)
 
         val amount = TextView(context).apply {
-            text = amountText
+            text = amountText + "€"
             textSize = 16f
             setTypeface(null, android.graphics.Typeface.BOLD)
             gravity = android.view.Gravity.END
@@ -89,5 +97,15 @@ class TransactionFragment : Fragment() {
         cardView.addView(linearLayout)
 
         return cardView
+    }
+
+    private fun getSubscriptionLevel(): String? {
+        val sharedPreferences = requireActivity().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("subscription_level", null)
+    }
+
+    private fun getUserId(): Int {
+        val sharedPreferences = requireActivity().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        return sharedPreferences.getInt("user_id", -1)
     }
 }

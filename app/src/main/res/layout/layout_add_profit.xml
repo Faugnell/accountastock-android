@@ -15,7 +15,7 @@
 
     <!-- Champ d'édition pour la description -->
     <EditText
-        android:id="@+id/profitDescriptionEditText"
+        android:id="@+id/editTextTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Nom du Gain"
@@ -24,7 +24,7 @@
 
     <!-- Champ d'édition pour le commentaire -->
     <EditText
-        android:id="@+id/profitCommentEditText"
+        android:id="@+id/editTextComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Commentaire (Facultatif)"
@@ -33,7 +33,7 @@
 
     <!-- Champ d'édition pour le montant -->
     <EditText
-        android:id="@+id/profitAmountEditText"
+        android:id="@+id/editTextAmount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Montant du gain"

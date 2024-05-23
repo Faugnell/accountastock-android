@@ -1,7 +1,10 @@
 import android.content.Context
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +13,10 @@ import androidx.core.content.ContextCompat
 import com.example.accountastock_android.MainActivity
 import com.example.accountastock_android.R
 import com.example.accountastock_android.data.database.MyDatabaseHelper
+import com.example.accountastock_android.data.model.Transaction
 import com.example.accountastock_android.databinding.FragmentProfitBinding
 import com.google.gson.Gson
+import java.util.Locale
 
 class ProfitFragment : Fragment() {
 
@@ -34,146 +39,67 @@ class ProfitFragment : Fragment() {
         val mainActivity = activity as MainActivity
         dbHelper = mainActivity.getDatabaseHelper()
 
-        if (getSubscriptionLevel() == "Level 1") {
-            val netProfitLast30Days = dbHelper.getNetProfitLast30Days()
-            binding.textProfitAmount.text = netProfitLast30Days.toString()
+        if (getSubscriptionLevel() == "level 1") {
+            val transactions = dbHelper.getTransactionsLast30Days()
+            val dailyNetProfits = calculateDailyNetProfits(transactions)
 
-            val profitPercentage = dbHelper.getProfitPercentageLast30Days()
-            binding.textProfitPercentage.text = String.format("%.2f%%", profitPercentage)
+            if (dailyNetProfits.isNotEmpty()) {
+                binding.textProfitAmount.text = dailyNetProfits.joinToString(", ")
 
-            if (profitPercentage < 0) {
-                // Si le pourcentage de gain est en baisse, changer la couleur du texte en rouge
-                binding.textProfitPercentage.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
-                // Afficher l'icône avec la flèche vers le bas
-                binding.imageArrow.setImageResource(R.drawable.ic_arrow_down)
-            } else if (profitPercentage > 0) {
-                // Si le pourcentage de gain est en augmentation, changer la couleur du texte en vert
-                binding.textProfitPercentage.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
-                // Afficher l'icône avec la flèche vers le haut
-                binding.imageArrow.setImageResource(R.drawable.ic_arrow_up)
+                val profitPercentage = calculateProfitPercentage(dailyNetProfits)
+                binding.textProfitPercentage.text = String.format("%.2f%%", profitPercentage)
+
+                updateUIBasedOnProfitPercentage(profitPercentage)
+
+                val chartData = createChartData(dailyNetProfits)
+                val jsonChartData = Gson().toJson(chartData)
+                Log.d("ChartDataJSON", jsonChartData)
+                Log.d("getHtmlData", getHtmlData(jsonChartData))
+
+                binding.webView.settings.javaScriptEnabled = true
+                binding.webView.loadDataWithBaseURL(
+                    null,
+                    getHtmlData(jsonChartData),
+                    "text/html",
+                    "UTF-8",
+                    null
+                )
             } else {
-                // Si le pourcentage de gain est stable, garder la couleur du texte par défaut
-                binding.textProfitPercentage.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                // Cacher l'icône
-                binding.imageArrow.visibility = View.GONE
+                binding.textProfitAmount.text = "Pas encore de transactions"
+                val webViewText = """
+                        <html>
+                        <head>
+                            <style>
+                                body {
+                                    display: flex;
+                                    justify-content: center;
+                                    align-items: center;
+                                    height: 100vh;
+                                    margin: 0;
+                                    font-family: Arial, sans-serif;
+                                }
+                                p {
+                                    text-align: center;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <p>Pas encore de données</p>
+                        </body>
+                        </html>
+                    """
+                binding.webView.loadDataWithBaseURL(
+                    null,
+                    webViewText,
+                    "text/html",
+                    "UTF-8",
+                    null
+                )
+
             }
-            binding.webView.settings.javaScriptEnabled = true
-
-            // Création du tableau de données pour le graphique
-            val chartData = mutableListOf<List<Any>>()
-
-            for (i in 29 downTo 0) {
-                val (profit, expense) = dbHelper.getProfitAndExpenseForDay(i)
-                val netProfit = profit - expense
-                chartData.add(listOf("J-$i", netProfit))
-            }
-
-            val jsonChartData = Gson().toJson(chartData)
-
-            binding.webView.loadDataWithBaseURL(
-                null,
-                getHtmlData(jsonChartData),
-                "text/html",
-                "UTF-8",
-                null
-            )
-
-        }else {
-
         }
 
-
-        // Exemple de données fictives pour le montant du profit net et le pourcentage d'augmentation
-        /*val profitAmount = "$2000"
-        val profitPercentage = "+10% sur 30 jours"
-
-        // Affichage des données dans les TextViews
-        binding.textProfitAmount.text = profitAmount
-        binding.textProfitPercentage.text = profitPercentage
-        // Activer l'exécution du JavaScript dans le WebView
-        binding.webView.settings.javaScriptEnabled = true
-        // Charger le graphique dans le WebView (exemple de code)
-        val htmlData = """
-            <html>
-  <head>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-    var data = google.visualization.arrayToDataTable([
-      ['Day', 'Profit'],
-      ['J-30', 2000],
-      ['J-29', 2100],
-      ['J-28', 2200],
-      ['J-27', 2300],
-      ['J-26', 2400],
-      ['J-25', 2500],
-      ['J-24', 2600],
-      ['J-23', 2700],
-      ['J-22', 2800],
-      ['J-21', 2900],
-      ['J-20', 3000],
-      ['J-19', 3100],
-      ['J-18', 3200],
-      ['J-17', 3300],
-      ['J-16', 3400],
-      ['J-15', 3500],
-      ['J-14', 3600],
-      ['J-13', 3700],
-      ['J-12', 3800],
-      ['J-11', 3900],
-      ['J-10', 4000],
-      ['J-9', 4100],
-      ['J-8', 4200],
-      ['J-7', 4300],
-      ['J-6', 4400],
-      ['J-5', 4500],
-      ['J-4', 4600],
-      ['J-3', 4700],
-      ['J-2', 4800],
-      ['J-1', 4900],
-      ['J-0', 5000],
-    ]);
-
-    var options = {
-    legend: 'none', // Masque la légende
-    hAxis: {
-        title: '', // Supprime le titre de l'axe des abscisses (X)
-        slantedText: true,
-        slantedTextAngle: 45
-    },
-    vAxis: {
-        textPosition: 'none', // Supprime les valeurs de l'axe des ordonnées (Y)
-        title: '', // Supprime le titre de l'axe des ordonnées (Y)
-        minValue: 0
-    },
-    chartArea: {
-        width: '90%', // Réduit la largeur de la zone du graphique pour éviter le défilement
-        height: '90%'
-    },
-    width: '100%', // Ajuste la largeur du graphique à la largeur de l'écran
-    height: 400 // Ajuste la hauteur du graphique
-};
-
-
-    var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-    chart.draw(data, options);
-}
-    </script>
-  </head>
-  <body>
-        <div id="curve_chart" style="width: 100vw; height: 100%;"></div>
-  </body>
-</html>
-            """
-        binding.webView.loadData(htmlData, "text/html", "UTF-8")*/
-
-        // Gérer le clic sur le bouton "Ajouter transaction"
         binding.imageView.setOnClickListener {
-            // Naviguer vers l'écran d'ajout de transaction
             findNavController().navigate(R.id.action_profitFragment_to_addTransactionFragment)
         }
     }
@@ -183,53 +109,122 @@ class ProfitFragment : Fragment() {
         return sharedPreferences.getString("subscription_level", null)
     }
 
-    // Fonction pour générer le code HTML du graphique
+    private fun calculateDailyNetProfits(transactions: List<Transaction>): List<Double> {
+        val dailyNetProfits = mutableListOf<Double>()
+        if (transactions.isEmpty()) return dailyNetProfits
+
+        transactions.sortedBy { it.date }
+
+        var currentDate = transactions.first().date
+        var dailyProfit = 0.0
+
+        transactions.forEach { transaction ->
+            if (transaction.date != currentDate) {
+                dailyNetProfits.add(dailyProfit)
+                dailyProfit = 0.0
+                currentDate = transaction.date
+            }
+            dailyProfit += if (transaction.fkIdProfit != null) {
+                transaction.amount
+            } else {
+                -transaction.amount
+            }
+        }
+        dailyNetProfits.add(dailyProfit) // add the last day's profit
+
+        // Log the daily net profits to verify
+        Log.d("DailyNetProfits", dailyNetProfits.toString())
+
+        return dailyNetProfits
+    }
+
+    private fun calculateProfitPercentage(dailyNetProfits: List<Double>): Double {
+        if (dailyNetProfits.isEmpty()) return 0.0
+        val totalProfit = dailyNetProfits.sum()
+        val averageDailyProfit = totalProfit / dailyNetProfits.size
+        return (averageDailyProfit / totalProfit) * 100
+    }
+
+    private fun updateUIBasedOnProfitPercentage(profitPercentage: Double) {
+        if (profitPercentage < 0) {
+            binding.textProfitPercentage.setTextColor(ContextCompat.getColor(requireContext(), R.color.red))
+            binding.imageArrow.setImageResource(R.drawable.ic_arrow_down)
+        } else if (profitPercentage > 0) {
+            binding.textProfitPercentage.setTextColor(ContextCompat.getColor(requireContext(), R.color.green))
+            binding.imageArrow.setImageResource(R.drawable.ic_arrow_up)
+        } else {
+            binding.textProfitPercentage.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+            binding.imageArrow.visibility = View.GONE
+        }
+    }
+
+    private fun createChartData(dailyNetProfits: List<Double>): List<List<Any>> {
+        val chartData = mutableListOf<List<Any>>()
+        for (i in dailyNetProfits.indices) {
+            chartData.add(listOf("J-${dailyNetProfits.size - 1 - i}", dailyNetProfits[i]))
+        }
+
+        // Log the chart data to verify
+        Log.d("ChartData", chartData.toString())
+
+        return chartData
+    }
+
     private fun getHtmlData(jsonChartData: String): String {
         return """
-            <html>
-                <head>
-                    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-                    <script type="text/javascript">
-                        google.charts.load('current', {'packages':['corechart']});
-                        google.charts.setOnLoadCallback(drawChart);
-                        
-                        function drawChart() {
-                            var data = google.visualization.arrayToDataTable($jsonChartData);
-                            var options = {
-                                legend: 'none',
-                                hAxis: {
-                                    title: '',
-                                    slantedText: true,
-                                    slantedTextAngle: 45
-                                },
-                                vAxis: {
-                                    textPosition: 'none',
-                                    title: '',
-                                    minValue: 0
-                                },
-                                chartArea: {
-                                    width: '90%',
-                                    height: '90%'
-                                },
-                                width: '100%',
-                                height: 400
-                            };
-                            
-                            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-                            chart.draw(data, options);
-                        }
-                    </script>
-                </head>
-                <body>
-                    <div id="curve_chart" style="width: 100vw; height: 100%;"></div>
-                </body>
-            </html>
-        """
+    <html>
+      <head>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+          google.charts.load('current', {'packages':['corechart']});
+          google.charts.setOnLoadCallback(drawChart);
+
+          function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+              ['Date', 'Montant'],
+              ${jsonChartData.substring(1, jsonChartData.length - 1)}
+            ]);
+
+            var options = {
+              legend: 'none',
+              curveType: 'function',
+              hAxis: {
+                textPosition: 'none',
+                title: '',
+                slantedText: true,
+                slantedTextAngle: 45
+              },
+              vAxis: {
+              textPosition: 'none',
+                title: '',
+                minValue: 0,
+                gridlines: { count: 0 }
+              },
+              chartArea: {
+                width: '90%',
+                height: '80%'
+              },
+              width: '100%',
+              height: 400,
+              areaOpacity: 0.2,
+              lineWidth: 2
+            };
+
+            var chart = new google.visualization.AreaChart(document.getElementById('curve_chart'));
+
+            chart.draw(data, options);
+          }
+        </script>
+      </head>
+      <body>
+        <div id="curve_chart" style="width: 100vw; height: 100%;"></div>
+      </body>
+    </html>
+    """
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }
